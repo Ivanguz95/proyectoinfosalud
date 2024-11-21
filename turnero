@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turnero de Salud</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <h1>Turnero de Salud</h1>
+    <div id="turnero"></div>
+    <script src="js/script.js"></script>
+</body>
+</html>
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+#turnero {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.turno {
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 300px;
+    background-color: #f9f9f9;
+}
+
+.turno h2 {
+    margin: 0 0 10px;
+    font-size: 18px;
+}
+
+.turno p {
+    margin: 5px 0;
+}
+
+.turno .paciente {
+    background-color: #e0e0e0;
+    padding: 5px;
+    margin: 5px 0;
+}
+
+.turno .paciente p {
+    margin: 2px 0;
+}
+
+.turno .historia-clinica {
+    background-color: #ffcccc;
+    padding: 5px;
+    margin: 5px 0;
+}
+// Datos de ejemplo
+const especialidades = ["Cardiología", "Dermatología", "Endocrinología", "Gastroenterología", "Hematología", "Neurología", "Oftalmología", "Pediatría", "Psicología", "Urología"];
+const practicas = ["Ecografía", "Mamografía", "Ecocardiograma", "Laboratorio", "Rayos X"];
+const profesionales = ["Dr. Juan Pérez", "Dra. María Gómez", "Dr. Luis Rodríguez", "Dra. Ana Martínez", "Dr. Carlos Sánchez"];
+const pacientes = ["Juan", "María", "Luis", "Ana", "Carlos", "Laura", "Pedro", "Sofía", "Miguel", "Lucía"];
+const apellidos = ["Pérez", "Gómez", "Rodríguez", "Martínez", "Sánchez", "López", "García", "Fernández", "Díaz", "Hernández"];
+const direcciones = ["Calle 123", "Avenida 456", "Calle 789", "Avenida 012"];
+const telefonos = ["123456789", "987654321", "112233445", "556677889"];
+
+// Función para generar un número aleatorio entre min y max
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Función para generar un turno
+function generarTurno(especialidad) {
+    const turno = document.createElement("div");
+    turno.className = "turno";
+
+    const fecha = new Date();
+    fecha.setDate(fecha.getDate() + getRandomInt(0, 5));
+    const fechaFormateada = fecha.toLocaleDateString();
+
+    const horario = `${getRandomInt(8, 18)}:${getRandomInt(0, 59)}`;
+    const profesional = profesionales[getRandomInt(0, profesionales.length - 1)];
+    const matricula = `MP-${getRandomInt(100000, 999999)}`;
+    const consultorio = `Consultorio ${getRandomInt(1, 10)}`;
+    const areaEstudio = practicas[getRandomInt(0, practicas.length - 1)];
+
+    turno.innerHTML = `
+        <h2>${especialidad}</h2>
+        <p><strong>Fecha:</strong> ${fechaFormateada}</p>
+        <p><strong>Horario:</strong> ${horario}</p>
+        <p><strong>Profesional:</strong> ${profesional}</p>
+        <p><strong>Matrícula:</strong> ${matricula}</p>
+        <p><strong>Consultorio:</strong> ${consultorio}</p>
+        <p><strong>Área de Estudio:</strong> ${areaEstudio}</p>
+    `;
+
+    // Generar pacientes para el turno
+    for (let i = 0; i < 3; i++) {
+        const paciente = document.createElement("div");
+        paciente.className = "paciente";
+
+        const nombre = pacientes[getRandomInt(0, pacientes.length - 1)];
+        const apellido = apellidos[getRandomInt(0, apellidos.length - 1)];
+        const dni = getRandomInt(10000000, 99999999);
+        const fechaNacimiento = new Date(getRandomInt(1950, 2005), getRandomInt(0, 11), getRandomInt(1, 28)).toLocaleDateString();
+        const direccion = direcciones[getRandomInt(0, direcciones.length - 1)];
+        const telefono = telefonos[getRandomInt(0, telefonos.length - 1)];
+
+        paciente.innerHTML = `
+            <p><strong>Nombre:</strong> ${nombre} ${apellido}</p>
+            <p><strong>DNI:</strong> ${dni}</p>
+            <p><strong>Fecha de Nacimiento:</strong> ${fechaNacimiento}</p>
+            <p><strong>Dirección:</strong> ${direccion}</p>
+            <p><strong>Teléfono:</strong> ${telefono}</p>
+        `;
+
+        turno.appendChild(paciente);
+    }
+
+    // Asignar color aleatorio a la variable
+    turno.style.backgroundColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+
+    // Asignar historia clínica aleatoria
+    if (Math.random() < 0.3) {
+        const historiaClinica = document.createElement("div");
+        historiaClinica.className = "historia-clinica";
+        historiaClinica.innerHTML = `<p><strong>Historia Clínica Integrada</strong></p>`;
+        turno.appendChild(historiaClinica);
+    }
+
+    return turno;
+}
+
+// Generar turnos para cada especialidad
+const turnero = document.getElementById("turnero");
+especialidades.forEach(especialidad => {
+    for (let i = 0; i < 5; i++) {
+        turnero.appendChild(generarTurno(especialidad));
+    }
+});
